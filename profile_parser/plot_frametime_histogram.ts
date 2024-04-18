@@ -28,7 +28,7 @@ for (let i = 0; i < files_in_directory.length; ++i) {
             xbins: {
                 start: 0,
                 size: 1,
-                end: 100
+                end: 1000
             },
             marker: {
                 color: 'green'

@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 // Take tasks as framtimes if they are at least this long in microseconds.
-// Very short tasks (> 1ms) don't correspond to frames drawn.
+// Very short tasks (< 2ms) don't correspond to frames drawn.
 const MIN_TASK_DURATION = 2000;
 
 const files_in_directory = fs.readdirSync("traces");
@@ -36,7 +36,17 @@ for (let i = 0; i < files_in_directory.length; ++i) {
             throw Error("Main renderer pid and tid not found");
         }
 
-        let frametimeEvents: {tasks: any[]} = {tasks: []};
+        let frametimeEvents: {
+            statistics: any,
+            metadata: any,
+            tasks: any,
+        } = {
+            statistics: [],
+            metadata: [],
+            tasks: [],
+        };
+
+        let frametimes: number[] = [];
         for (let i = 0; i < traceEvents.length; ++i) {
 
             let event = traceEvents[i]; 
@@ -45,10 +55,33 @@ for (let i = 0; i < files_in_directory.length; ++i) {
 
                     if (event.dur > MIN_TASK_DURATION) {
                         frametimeEvents.tasks.push(event);
+                        frametimes.push(event.dur / 1000);
                     }
             }
         }
+        
+        frametimes.sort((a, b) => a - b);
+        
+        let sum = 0;
+        for (let i = 0; i < frametimes.length; ++i) {
+            sum += (frametimes[i]);
+        }
+        const avg_frametime = Math.round((sum / frametimes.length) * 100) / 100;
 
+        const median_index = Math.floor(0.5 * frametimes.length);
+        const median_frametime = Math.round((frametimes[median_index]) * 100) / 100;
+
+        const ninetyninth_percentile_index = Math.floor(0.99 * frametimes.length);
+        const ninetyninth_percentile_frametime = Math.round(frametimes[ninetyninth_percentile_index] * 100) / 100;
+
+        const statistics = {
+            "AvgFrameTime": avg_frametime,
+            "MedianFrameTime": median_frametime,
+            "99thPercentileFrameTime": ninetyninth_percentile_frametime
+        }
+
+        frametimeEvents.statistics = statistics;
+        frametimeEvents.metadata = metadata;
 
         const result_json = JSON.stringify(frametimeEvents, undefined, " ");
         const result_file_path = "results/result-" + filename;
