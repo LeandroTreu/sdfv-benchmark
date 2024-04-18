@@ -9,8 +9,6 @@ const frames = timeline.tasks;
 
 let data: Plot[] = [];
 
-let x_array: number[] = [];
-let y_array: number[] = [];
 for (let i = 0; i < frames.length; ++i) {
 
     let event = frames[i]; 
@@ -29,7 +27,8 @@ for (let i = 0; i < frames.length; ++i) {
 }
 
 const layout = {
-    title: "Frame Timeline"
+    title: "Frame Timeline",
+    xaxis: {title: "Time (ticks)"},
 }
 
 plot(data, layout);
