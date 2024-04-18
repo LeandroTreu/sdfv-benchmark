@@ -1,6 +1,8 @@
 import fs from 'fs';
 import { plot, Plot } from 'nodeplotlib';
 
+const MAX_BIN_X_VALUE = 200;
+
 const files_in_directory = fs.readdirSync("results");
 
 for (let i = 0; i < files_in_directory.length; ++i) {
@@ -19,7 +21,11 @@ for (let i = 0; i < files_in_directory.length; ++i) {
         let x_array: number[] = [];
         for (let i = 0; i < frames.length; ++i)  {
             const event = frames[i]; 
-            x_array.push(event.dur / 1000);
+            let event_dur_ms = event.dur / 1000;
+            if (event_dur_ms > MAX_BIN_X_VALUE) {
+                event_dur_ms = MAX_BIN_X_VALUE;
+            }
+            x_array.push(event_dur_ms);
         }
         const hist: Plot = { 
             x: x_array,
@@ -38,7 +44,7 @@ for (let i = 0; i < files_in_directory.length; ++i) {
 
         const layout = {
             title: "Frametime Histogram for " + filename,
-            xaxis: {title: "Frametime (ms)", range: [0, 100]},
+            xaxis: {title: "Frametime (ms)", range: [0, MAX_BIN_X_VALUE]},
             yaxis: {title: "Count"},
             shapes: [
                 // 60 fps line
