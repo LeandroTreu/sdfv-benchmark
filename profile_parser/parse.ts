@@ -71,13 +71,14 @@ for (let i = 0; i < files_in_directory.length; ++i) {
         const median_index = Math.floor(0.5 * frametimes.length);
         const median_frametime = Math.round((frametimes[median_index]) * 100) / 100;
 
-        const ninetyninth_percentile_index = Math.floor(0.99 * frametimes.length);
-        const ninetyninth_percentile_frametime = Math.round(frametimes[ninetyninth_percentile_index] * 100) / 100;
+        const ninetyfifth_percentile_index = Math.floor(0.95 * frametimes.length);
+        const ninetyfifth_percentile_frametime = Math.round(frametimes[ninetyfifth_percentile_index] * 100) / 100;
 
         const statistics = {
+            "NumberOfDataPoints": frametimes.length,
             "AvgFrameTime": avg_frametime,
             "MedianFrameTime": median_frametime,
-            "99thPercentileFrameTime": ninetyninth_percentile_frametime
+            "95thPercentileFrameTime": ninetyfifth_percentile_frametime
         }
 
         frametimeEvents.statistics = statistics;
