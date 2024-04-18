@@ -28,7 +28,7 @@ for (let i = 0; i < files_in_directory.length; ++i) {
             xbins: {
                 start: 0,
                 size: 1,
-                end: 200
+                end: 100
             },
             marker: {
                 color: 'green'
@@ -38,17 +38,33 @@ for (let i = 0; i < files_in_directory.length; ++i) {
 
         const layout = {
             title: "Frametime Histogram for " + filename,
-            xaxis: {title: "Frametime (ms)"},
+            xaxis: {title: "Frametime (ms)", range: [0, 100]},
             yaxis: {title: "Count"},
             shapes: [
+                // 60 fps line
                 {
                 type: "line" as "line",
                 x0: 16.7,
                 y0: 0,
                 x1: 16.7,
-                y1: 30,
+                y1: 1.0,
+                yref: "paper" as "paper",
                 line: {
-                    color: 'black',
+                    color: 'orange',
+                    width: 1,
+                    dot: 'dot'
+                }
+                },
+                // 30 fps line
+                {
+                type: "line" as "line",
+                x0: 33.4,
+                y0: 0,
+                x1: 33.4,
+                y1: 1.0,
+                yref: "paper" as "paper",
+                line: {
+                    color: 'red',
                     width: 1,
                     dot: 'dot'
                 }
