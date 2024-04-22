@@ -31,7 +31,7 @@ for (let i = 0; i < files_in_directory.length; ++i) {
             data.push(line);
         }
         const layout = {
-            title: "Frame Timeline",
+            title: "Frame Timeline " + filename,
             xaxis: { title: "Time (ticks)" },
         };
         (0, nodeplotlib_1.plot)(data, layout);

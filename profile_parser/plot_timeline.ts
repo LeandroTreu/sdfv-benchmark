@@ -36,7 +36,7 @@ for (let i = 0; i < files_in_directory.length; ++i) {
         }
         
         const layout = {
-            title: "Frame Timeline",
+            title: "Frame Timeline " + filename,
             xaxis: {title: "Time (ticks)"},
         }
         
