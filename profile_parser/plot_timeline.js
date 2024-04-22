@@ -30,8 +30,9 @@ for (let i = 0; i < files_in_directory.length; ++i) {
             };
             data.push(line);
         }
+        const plot_filename = filename.replace("result-", "");
         const layout = {
-            title: "Frame Timeline " + filename,
+            title: "Frame Timeline " + plot_filename,
             xaxis: { title: "Time (ticks)" },
         };
         (0, nodeplotlib_1.plot)(data, layout);

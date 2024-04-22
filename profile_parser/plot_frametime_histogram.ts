@@ -47,8 +47,9 @@ for (let i = 0; i < files_in_directory.length; ++i) {
         };
         data.push(hist);
 
+        const plot_filename = filename.replace("result-", "");
         const layout = {
-            title: "Frametime Histogram for " + filename,
+            title: "Frametime Histogram for " + plot_filename,
             xaxis: {title: "Frametime (ms)", range: [0, MAX_BIN_X_VALUE]},
             yaxis: {title: "Count"},
             shapes: [

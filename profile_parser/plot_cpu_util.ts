@@ -63,11 +63,12 @@ for (let i = 0; i < files_in_directory.length; ++i) {
         }
         
 
+        const plot_filename = filename.replace("result-", "");
         const line: Plot = { 
             x: x_axis,
             y: cpu_util_samples,
             type: 'scatter',
-            name: filename,
+            name: plot_filename,
             mode: 'lines',
             line: {
                 width: 1
