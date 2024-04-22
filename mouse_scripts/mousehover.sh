@@ -1,13 +1,25 @@
 #!/bin/bash
 
+# Set these according to screen size and element positions
+hover_start_x=884
+hover_start_y=670
+recording_button_x=1683
+recording_button_y=161
+hover_iter=30 # Mouse-movements per hover
+repetitions=5 # Number of straight line hovers
+
 # Alt+Tab to the browser window
 xdotool key Alt+Tab
+sleep 0.5
+
+# Start recording in devtools
+xdotool mousemove --sync $recording_button_x $recording_button_y
+xdotool click 1
+sleep 0.5
+
 
 # Set initial mouse position
-xdotool mousemove --sync 800 480
-
-hover_iter=30
-repetitions=5
+xdotool mousemove --sync $hover_start_x $hover_start_y
 
 for ((r = 0; r < repetitions; r++)); do
 
@@ -27,3 +39,10 @@ for ((r = 0; r < repetitions; r++)); do
     done
 
 done
+
+# Stop recording in devtools
+xdotool mousemove --sync $recording_button_x $recording_button_y
+xdotool click 1
+
+# Alt+Tab back to the terminal
+xdotool key Alt+Tab
