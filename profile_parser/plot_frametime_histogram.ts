@@ -1,6 +1,9 @@
 import fs from 'fs';
 import { plot, Plot } from 'nodeplotlib';
 
+// Take tasks as framtimes if they are at least this long in microseconds.
+// Very short tasks (< 2ms) don't correspond to frames drawn.
+const MIN_FRAME_DURATION = 2000;
 const MAX_BIN_X_VALUE = 200;
 
 const files_in_directory = fs.readdirSync("results");
@@ -21,11 +24,13 @@ for (let i = 0; i < files_in_directory.length; ++i) {
         let x_array: number[] = [];
         for (let i = 0; i < frames.length; ++i)  {
             const event = frames[i]; 
-            let event_dur_ms = event.dur / 1000;
-            if (event_dur_ms > MAX_BIN_X_VALUE) {
-                event_dur_ms = MAX_BIN_X_VALUE;
+            if (event.dur > MIN_FRAME_DURATION) {
+                let event_dur_ms = event.dur / 1000;
+                if (event_dur_ms > MAX_BIN_X_VALUE) {
+                    event_dur_ms = MAX_BIN_X_VALUE;
+                }
+                x_array.push(event_dur_ms);
             }
-            x_array.push(event_dur_ms);
         }
         const hist: Plot = { 
             x: x_array,

@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 // Take tasks as framtimes if they are at least this long in microseconds.
 // Very short tasks (< 2ms) don't correspond to frames drawn.
-const MIN_TASK_DURATION = 2000;
+const MIN_FRAME_DURATION = 2000;
 const files_in_directory = fs_1.default.readdirSync("traces");
 for (let i = 0; i < files_in_directory.length; ++i) {
     const filename = files_in_directory[i];
@@ -41,8 +41,8 @@ for (let i = 0; i < files_in_directory.length; ++i) {
             let event = traceEvents[i];
             if (event.pid === main_renderer_pid && event.tid === main_renderer_tid
                 && event.name === "RunTask" && event.ph === "X") {
-                if (event.dur > MIN_TASK_DURATION) {
-                    frametimeEvents.tasks.push(event);
+                frametimeEvents.tasks.push(event);
+                if (event.dur > MIN_FRAME_DURATION) {
                     frametimes.push(event.dur / 1000);
                 }
             }

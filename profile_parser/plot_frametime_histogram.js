@@ -5,6 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const nodeplotlib_1 = require("nodeplotlib");
+// Take tasks as framtimes if they are at least this long in microseconds.
+// Very short tasks (< 2ms) don't correspond to frames drawn.
+const MIN_FRAME_DURATION = 2000;
 const MAX_BIN_X_VALUE = 200;
 const files_in_directory = fs_1.default.readdirSync("results");
 for (let i = 0; i < files_in_directory.length; ++i) {
@@ -20,11 +23,13 @@ for (let i = 0; i < files_in_directory.length; ++i) {
         let x_array = [];
         for (let i = 0; i < frames.length; ++i) {
             const event = frames[i];
-            let event_dur_ms = event.dur / 1000;
-            if (event_dur_ms > MAX_BIN_X_VALUE) {
-                event_dur_ms = MAX_BIN_X_VALUE;
+            if (event.dur > MIN_FRAME_DURATION) {
+                let event_dur_ms = event.dur / 1000;
+                if (event_dur_ms > MAX_BIN_X_VALUE) {
+                    event_dur_ms = MAX_BIN_X_VALUE;
+                }
+                x_array.push(event_dur_ms);
             }
-            x_array.push(event_dur_ms);
         }
         const hist = {
             x: x_array,

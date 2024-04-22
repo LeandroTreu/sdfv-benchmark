@@ -2,7 +2,7 @@ import fs from 'fs';
 
 // Take tasks as framtimes if they are at least this long in microseconds.
 // Very short tasks (< 2ms) don't correspond to frames drawn.
-const MIN_TASK_DURATION = 2000;
+const MIN_FRAME_DURATION = 2000;
 
 const files_in_directory = fs.readdirSync("traces");
 
@@ -53,8 +53,9 @@ for (let i = 0; i < files_in_directory.length; ++i) {
             if (event.pid === main_renderer_pid && event.tid === main_renderer_tid
                 && event.name === "RunTask" && event.ph === "X") {
 
-                    if (event.dur > MIN_TASK_DURATION) {
-                        frametimeEvents.tasks.push(event);
+                    frametimeEvents.tasks.push(event);
+
+                    if (event.dur > MIN_FRAME_DURATION) {
                         frametimes.push(event.dur / 1000);
                     }
             }
