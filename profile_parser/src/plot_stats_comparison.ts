@@ -39,7 +39,7 @@ for (let i = 0; i < files_in_directory.length; ++i) {
 }
 
 const layout = {
-    title: "Statistics Comparison",
+    title: "Frametime Comparison",
     yaxis: {title: "Frametime (ms)"},
     shapes: [
         // 60 fps line
