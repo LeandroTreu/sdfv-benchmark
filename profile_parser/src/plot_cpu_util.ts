@@ -2,6 +2,10 @@ import fs from 'fs';
 import { plot, Plot } from 'nodeplotlib';
 
 const PLOT_FILES_IN_ONE_GRAPH = true;
+// The files should be ordered according to version benchmarked
+// Each consecutive TRACES_PER_VERSION number of files get put in the same bucket
+const N_VERSIONS = 2; // Number of different benchmark versions to compare (each version gets a color in the graph)
+const TRACES_PER_VERSION = 3; // Number of samples/traces per version
 const CPU_UTIL_SAMPLE_WINDOW_SIZE_MS = 500; // Adjust for sampling resolution / smoothing
 
 const files_in_directory = fs.readdirSync("results");
@@ -12,6 +16,10 @@ const layout = {
     xaxis: {title: "Time (s)"},
     yaxis: {title: "Utilization (%)", range: [0, 100]},
 }
+
+let plot_index = 0;
+let plot_colors = ["green", "red", "orange", "blue", "purple", "black"];
+let line_color = plot_colors[0];
 
 for (let i = 0; i < files_in_directory.length; ++i) {
     const filename = files_in_directory[i];
@@ -62,7 +70,9 @@ for (let i = 0; i < files_in_directory.length; ++i) {
             window_end = window_start + window_size;
         }
         
-
+        if (plot_index % TRACES_PER_VERSION === 0) {
+            line_color = plot_colors[Math.round(plot_index / TRACES_PER_VERSION)]
+        }
         const plot_filename = filename.replace("result-", "");
         const line: Plot = { 
             x: x_axis,
@@ -71,7 +81,8 @@ for (let i = 0; i < files_in_directory.length; ++i) {
             name: plot_filename,
             mode: 'lines',
             line: {
-                width: 1
+                width: 1,
+                color: line_color,
             }
         };
         data.push(line);
@@ -79,6 +90,7 @@ for (let i = 0; i < files_in_directory.length; ++i) {
             plot(data, layout);
         }
         
+        plot_index++;
     }
 
 }

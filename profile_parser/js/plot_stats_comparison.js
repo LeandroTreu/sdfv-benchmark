@@ -5,6 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const nodeplotlib_1 = require("nodeplotlib");
+// The files should be ordered according to version benchmarked
+// Each consecutive TRACES_PER_VERSION number of files get put in the same bucket
+const N_VERSIONS = 2; // Number of different benchmark versions to compare (each version gets a color in the graph)
+const TRACES_PER_VERSION = 3; // Number of samples/traces per version
+let sample_index = 0;
+let avg_frametimes = [];
+let median_frametimes = [];
+let percentile_frametimes = [];
 const files_in_directory = fs_1.default.readdirSync("results");
 let data = [];
 for (let i = 0; i < files_in_directory.length; ++i) {
@@ -21,17 +29,46 @@ for (let i = 0; i < files_in_directory.length; ++i) {
         const median_frametime = stats.MedianFrameTime;
         const percentile_frametime = stats["95thPercentileFrameTime"];
         const plot_filename = filename.replace("result-", "");
-        const y_values = [avg_frametime, median_frametime, percentile_frametime];
-        const bar = {
-            x: ["Average", "Median", "95th Percentile"],
-            y: y_values,
-            type: 'bar',
-            name: plot_filename,
-            text: y_values.map(String),
-            textposition: "auto",
-            hoverinfo: "none"
-        };
-        data.push(bar);
+        avg_frametimes.push(avg_frametime);
+        median_frametimes.push(median_frametime);
+        percentile_frametimes.push(percentile_frametime);
+        sample_index++;
+        if (sample_index !== 0 && sample_index % TRACES_PER_VERSION === 0) {
+            avg_frametimes.sort((a, b) => a - b);
+            median_frametimes.sort((a, b) => a - b);
+            percentile_frametimes.sort((a, b) => a - b);
+            const median_avg_ft = avg_frametimes[Math.floor(avg_frametimes.length / 2)];
+            const median_m_ft = median_frametimes[Math.floor(median_frametimes.length / 2)];
+            const median_p_ft = percentile_frametimes[Math.floor(percentile_frametimes.length / 2)];
+            const minus_deltas = [median_avg_ft - avg_frametimes[0],
+                median_m_ft - median_frametimes[0],
+                median_p_ft - percentile_frametimes[0]];
+            const plus_deltas = [avg_frametimes[avg_frametimes.length - 1] - median_avg_ft,
+                median_frametimes[median_frametimes.length - 1] - median_m_ft,
+                percentile_frametimes[percentile_frametimes.length - 1] - median_p_ft];
+            const y_values = [median_avg_ft, median_m_ft, median_p_ft];
+            const bar = {
+                x: ["Average", "Median", "95th Percentile"],
+                y: y_values,
+                type: 'bar',
+                name: plot_filename,
+                text: y_values.map(String),
+                textposition: "auto",
+                hoverinfo: "none",
+                error_y: {
+                    type: 'data',
+                    symmetric: false,
+                    array: plus_deltas,
+                    arrayminus: minus_deltas,
+                    visible: true
+                },
+            };
+            data.push(bar);
+            // Reset arrays for next bucket of samples
+            avg_frametimes = [];
+            median_frametimes = [];
+            percentile_frametimes = [];
+        }
     }
 }
 const layout = {
