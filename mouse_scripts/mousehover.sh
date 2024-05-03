@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Set these according to screen size and element positions
+# Find mouse pointer coordinates with "xdotool getmouselocation"
 hover_start_x=884
 hover_start_y=670
 recording_button_x=1683

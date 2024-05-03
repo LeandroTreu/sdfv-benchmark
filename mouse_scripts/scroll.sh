@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # Set these according to screen size and element positions
-zoom_x=884
-zoom_y=670
+# Find mouse pointer coordinates with "xdotool getmouselocation"
+zoom_x=881
+zoom_y=674
 recording_button_x=1683
 recording_button_y=161
 delay=50 # In ms, between scroll ticks

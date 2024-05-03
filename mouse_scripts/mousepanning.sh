@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # Set these according to screen size and element positions
-panning_start_x=884
-panning_start_y=400
+# Find mouse pointer coordinates with "xdotool getmouselocation"
+panning_start_x=1010
+panning_start_y=600
 recording_button_x=1683
 recording_button_y=161
 n_mousemove=20 # Mouse-movements per panning
