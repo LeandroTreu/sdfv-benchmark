@@ -4,7 +4,7 @@ import { plot, Plot } from 'nodeplotlib';
 // Take tasks as framtimes if they are at least this long in microseconds.
 // Very short tasks (< 2ms) don't correspond to frames drawn.
 const MIN_FRAME_DURATION = 2000;
-const MAX_BIN_X_VALUE = 200;
+const MAX_BIN_X_VALUE = 200; // Exclusive. All values above are capped to this value for plotting.
 
 // The files should be ordered according to version benchmarked
 // Each consecutive TRACES_PER_VERSION number of files get put in the same bucket
@@ -33,8 +33,8 @@ for (let i = 0; i < files_in_directory.length; ++i) {
             const event = frames[i]; 
             if (event.dur > MIN_FRAME_DURATION) {
                 let event_dur_ms = event.dur / 1000;
-                if (event_dur_ms > MAX_BIN_X_VALUE) {
-                    event_dur_ms = MAX_BIN_X_VALUE;
+                if (event_dur_ms >= MAX_BIN_X_VALUE) {
+                    event_dur_ms = MAX_BIN_X_VALUE-0.001;
                 }
                 x_array.push(event_dur_ms);
             }

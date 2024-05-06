@@ -30,8 +30,8 @@ for (let i = 0; i < files_in_directory.length; ++i) {
             const event = frames[i];
             if (event.dur > MIN_FRAME_DURATION) {
                 let event_dur_ms = event.dur / 1000;
-                if (event_dur_ms > MAX_BIN_X_VALUE) {
-                    event_dur_ms = MAX_BIN_X_VALUE;
+                if (event_dur_ms >= MAX_BIN_X_VALUE) {
+                    event_dur_ms = MAX_BIN_X_VALUE - 0.001;
                 }
                 x_array.push(event_dur_ms);
             }
