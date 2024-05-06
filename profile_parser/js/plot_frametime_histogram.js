@@ -8,7 +8,7 @@ const nodeplotlib_1 = require("nodeplotlib");
 // Take tasks as framtimes if they are at least this long in microseconds.
 // Very short tasks (< 2ms) don't correspond to frames drawn.
 const MIN_FRAME_DURATION = 2000;
-const MAX_BIN_X_VALUE = 200;
+const MAX_BIN_X_VALUE = 200; // Exclusive. All values above are capped to this value for plotting.
 // The files should be ordered according to version benchmarked
 // Each consecutive TRACES_PER_VERSION number of files get put in the same bucket
 const N_VERSIONS = 2; // Number of different benchmark versions to compare (each version gets a color in the graph)
