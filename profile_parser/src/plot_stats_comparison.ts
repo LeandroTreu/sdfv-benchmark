@@ -88,7 +88,7 @@ const layout = {
     shapes: [
         // 60 fps line
         {
-        opacity: 0.7,
+        opacity: 1.0,
         type: "line" as "line",
         x0: 0,
         y0: 16.7,
@@ -103,7 +103,7 @@ const layout = {
         },
         // 30 fps line
         {
-        opacity: 0.7,
+        opacity: 1.0,
         type: "line" as "line",
         x0: 0,
         y0: 33.4,

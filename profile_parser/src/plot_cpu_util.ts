@@ -6,7 +6,7 @@ const PLOT_FILES_IN_ONE_GRAPH = true;
 // Each consecutive TRACES_PER_VERSION number of files get put in the same bucket
 const N_VERSIONS = 2; // Number of different benchmark versions to compare (each version gets a color in the graph)
 const TRACES_PER_VERSION = 3; // Number of samples/traces per version
-const CPU_UTIL_SAMPLE_WINDOW_SIZE_MS = 500; // Adjust for sampling resolution / smoothing
+const CPU_UTIL_SAMPLE_WINDOW_SIZE_MS = 250; // Adjust for sampling resolution / smoothing (Chrome uses about 500 ms)
 
 const files_in_directory = fs.readdirSync("results");
 
