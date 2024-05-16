@@ -5,21 +5,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const nodeplotlib_1 = require("nodeplotlib");
+const color_cfg_1 = __importDefault(require("./color_cfg"));
 const PLOT_FILES_IN_ONE_GRAPH = true;
 // The files should be ordered according to version benchmarked
 // Each consecutive TRACES_PER_VERSION number of files get put in the same bucket
 const N_VERSIONS = 2; // Number of different benchmark versions to compare (each version gets a color in the graph)
 const TRACES_PER_VERSION = 3; // Number of samples/traces per version
-const CPU_UTIL_SAMPLE_WINDOW_SIZE_MS = 250; // Adjust for sampling resolution / smoothing (Chrome uses about 500 ms)
+const CPU_UTIL_SAMPLE_WINDOW_SIZE_MS = 100; // Adjust for sampling resolution / smoothing (Chrome uses about 500 ms)
+const PLOT_TITLE = "Hover Far CPU Utilization";
 const files_in_directory = fs_1.default.readdirSync("results");
 let data = [];
 const layout = {
-    title: "CPU Utilization",
-    xaxis: { title: "Time (s)" },
+    title: PLOT_TITLE,
+    xaxis: { title: "Time (s)", autotick: false, dtick: 1 },
     yaxis: { title: "Utilization (%)", range: [0, 100] },
 };
 let plot_index = 0;
-let plot_colors = ["green", "red", "orange", "blue", "purple", "black"];
+let plot_colors = [color_cfg_1.default.GREEN, color_cfg_1.default.BLUE, color_cfg_1.default.ORANGE, color_cfg_1.default.RED, color_cfg_1.default.YELLOW];
 let line_color = plot_colors[0];
 for (let i = 0; i < files_in_directory.length; ++i) {
     const filename = files_in_directory[i];
@@ -62,7 +64,8 @@ for (let i = 0; i < files_in_directory.length; ++i) {
         if (plot_index % TRACES_PER_VERSION === 0) {
             line_color = plot_colors[Math.round(plot_index / TRACES_PER_VERSION)];
         }
-        const plot_filename = filename.replace("result-", "");
+        let plot_filename = filename.replace("result-", "");
+        plot_filename = plot_filename.replace(".json", "");
         const line = {
             x: x_axis,
             y: cpu_util_samples,

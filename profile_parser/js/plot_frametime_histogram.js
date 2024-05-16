@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const nodeplotlib_1 = require("nodeplotlib");
+const color_cfg_1 = __importDefault(require("./color_cfg"));
 // Take tasks as framtimes if they are at least this long in microseconds.
 // Very short tasks (< 2ms) don't correspond to frames drawn.
 const MIN_FRAME_DURATION = 2000;
@@ -13,6 +14,9 @@ const MAX_BIN_X_VALUE = 200; // Exclusive. All values above are capped to this v
 // Each consecutive TRACES_PER_VERSION number of files get put in the same bucket
 const N_VERSIONS = 2; // Number of different benchmark versions to compare (each version gets a color in the graph)
 const TRACES_PER_VERSION = 3; // Number of samples/traces per version
+const PLOT_TITLE_0 = "Optimized SDFV Frametime Histogram";
+const PLOT_TITLE_1 = "Un-Optimized SDFV Frametime Histogram";
+let plot_colors = [color_cfg_1.default.GREEN, color_cfg_1.default.BLUE, color_cfg_1.default.ORANGE, color_cfg_1.default.RED, color_cfg_1.default.YELLOW];
 let sample_index = 0;
 let x_array = [];
 const files_in_directory = fs_1.default.readdirSync("results");
@@ -50,14 +54,21 @@ for (let i = 0; i < files_in_directory.length; ++i) {
                     end: 1000
                 },
                 marker: {
-                    color: 'green'
+                    color: plot_colors[Math.floor(sample_index / TRACES_PER_VERSION) - 1]
                 }
             };
             data.push(hist);
-            const plot_filename = filename.replace("result-", "");
+            let plot_filename = filename.replace("result-", "");
+            let plot_title = "Frametime Histogram for " + plot_filename;
+            if (sample_index === 3) {
+                plot_title = PLOT_TITLE_0;
+            }
+            if (sample_index === 6) {
+                plot_title = PLOT_TITLE_1;
+            }
             const layout = {
-                title: "Frametime Histogram for " + plot_filename,
-                xaxis: { title: "Frametime (ms)", range: [0, MAX_BIN_X_VALUE] },
+                title: plot_title,
+                xaxis: { title: "Frametime (ms)", range: [0, MAX_BIN_X_VALUE], dtick: 10 },
                 yaxis: { title: "Count" },
                 shapes: [
                     // 60 fps line
@@ -69,8 +80,8 @@ for (let i = 0; i < files_in_directory.length; ++i) {
                         y1: 1.0,
                         yref: "paper",
                         line: {
-                            color: 'orange',
-                            width: 1,
+                            color: color_cfg_1.default.YELLOW,
+                            width: 1.5,
                             dot: 'dot'
                         }
                     },
@@ -83,8 +94,8 @@ for (let i = 0; i < files_in_directory.length; ++i) {
                         y1: 1.0,
                         yref: "paper",
                         line: {
-                            color: 'red',
-                            width: 1,
+                            color: color_cfg_1.default.RED,
+                            width: 1.5,
                             dot: 'dot'
                         }
                     },

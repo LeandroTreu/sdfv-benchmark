@@ -1,24 +1,27 @@
 import fs from 'fs';
 import { plot, Plot } from 'nodeplotlib';
+import colors from "./color_cfg";
 
 const PLOT_FILES_IN_ONE_GRAPH = true;
 // The files should be ordered according to version benchmarked
 // Each consecutive TRACES_PER_VERSION number of files get put in the same bucket
 const N_VERSIONS = 2; // Number of different benchmark versions to compare (each version gets a color in the graph)
 const TRACES_PER_VERSION = 3; // Number of samples/traces per version
-const CPU_UTIL_SAMPLE_WINDOW_SIZE_MS = 250; // Adjust for sampling resolution / smoothing (Chrome uses about 500 ms)
+const CPU_UTIL_SAMPLE_WINDOW_SIZE_MS = 100; // Adjust for sampling resolution / smoothing (Chrome uses about 500 ms)
+
+const PLOT_TITLE = "Hover Far CPU Utilization";
 
 const files_in_directory = fs.readdirSync("results");
 
 let data: Plot[] = [];
 const layout = {
-    title: "CPU Utilization",
-    xaxis: {title: "Time (s)"},
+    title: PLOT_TITLE,
+    xaxis: {title: "Time (s)", autotick: false, dtick: 1},
     yaxis: {title: "Utilization (%)", range: [0, 100]},
 }
 
 let plot_index = 0;
-let plot_colors = ["green", "red", "orange", "blue", "purple", "black"];
+let plot_colors = [colors.GREEN, colors.BLUE, colors.ORANGE, colors.RED, colors.YELLOW];
 let line_color = plot_colors[0];
 
 for (let i = 0; i < files_in_directory.length; ++i) {
@@ -73,7 +76,8 @@ for (let i = 0; i < files_in_directory.length; ++i) {
         if (plot_index % TRACES_PER_VERSION === 0) {
             line_color = plot_colors[Math.round(plot_index / TRACES_PER_VERSION)]
         }
-        const plot_filename = filename.replace("result-", "");
+        let plot_filename = filename.replace("result-", "");
+        plot_filename = plot_filename.replace(".json", "");
         const line: Plot = { 
             x: x_axis,
             y: cpu_util_samples,

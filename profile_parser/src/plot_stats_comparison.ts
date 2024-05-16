@@ -1,10 +1,14 @@
 import fs from 'fs';
 import { plot, Plot } from 'nodeplotlib';
+import colors from "./color_cfg";
 
 // The files should be ordered according to version benchmarked
 // Each consecutive TRACES_PER_VERSION number of files get put in the same bucket
 const N_VERSIONS = 2; // Number of different benchmark versions to compare (each version gets a color in the graph)
 const TRACES_PER_VERSION = 3; // Number of samples/traces per version
+
+const PLOT_TITLE = "Zoom Frametime Comparison";
+const bar_colors = ["#388E3C", "#1976D2", "orange", "blue"];
 
 let sample_index = 0;
 let avg_frametimes: number[] = [];
@@ -32,7 +36,14 @@ for (let i = 0; i < files_in_directory.length; ++i) {
         const median_frametime = stats.MedianFrameTime;
         const percentile_frametime = stats["95thPercentileFrameTime"];
 
-        const plot_filename = filename.replace("result-", "");
+        let plot_filename = filename.replace("result-", "");
+        plot_filename = plot_filename.replace(".json", "");
+        if (sample_index === 3) {
+            plot_filename = "Optimized";
+        }
+        if (sample_index === 6) {
+            plot_filename = "Un-optimized";
+        }
 
         avg_frametimes.push(avg_frametime);
         median_frametimes.push(median_frametime);
@@ -61,15 +72,21 @@ for (let i = 0; i < files_in_directory.length; ++i) {
                 y: y_values,
                 type: 'bar',
                 name: plot_filename,
-                text: y_values.map(String),
-                textposition: "auto",
-                hoverinfo: "none",
+                marker: {
+                    color: bar_colors[Math.floor(sample_index / TRACES_PER_VERSION) - 1],
+                },
+                // text: y_values.map(String),
+                // textposition: "auto",
+                // hoverinfo: "none",
                 error_y: {
                     type: 'data',
                     symmetric: false,
                     array: plus_deltas,
                     arrayminus: minus_deltas,
-                    visible: true
+                    visible: true,
+                    color: "black",
+                    thickness: 1.0,
+                    width: 10,
                 },
             };
             data.push(bar);
@@ -83,8 +100,8 @@ for (let i = 0; i < files_in_directory.length; ++i) {
 }
 
 const layout = {
-    title: "Frametime Comparison",
-    yaxis: {title: "Frametime (ms)"},
+    title: PLOT_TITLE,
+    yaxis: {title: "Frametime (ms)", autotick: false, dtick: 5},
     shapes: [
         // 60 fps line
         {
@@ -96,7 +113,7 @@ const layout = {
         y1: 16.7,
         xref: "paper" as "paper",
         line: {
-            color: 'orange',
+            color: colors.YELLOW,
             width: 1,
             dot: 'dot'
         }
@@ -111,7 +128,7 @@ const layout = {
         y1: 33.4,
         xref: "paper" as "paper",
         line: {
-            color: 'red',
+            color: colors.RED,
             width: 1,
             dot: 'dot'
         }
