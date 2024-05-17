@@ -1,4 +1,5 @@
 import { plot, Plot } from 'nodeplotlib';
+import colors from "./color_cfg";
 
 let data: Plot[] = [];
 
@@ -11,6 +12,9 @@ let bar: Plot = {
     y: y_values,
     type: 'bar',
     name: "Standard",
+    marker: {
+        color: colors.BLUE,
+    },
     // text: y_values.map(String),
     // textposition: "auto",
     // hoverinfo: "none",
@@ -19,7 +23,10 @@ let bar: Plot = {
         symmetric: false,
         array: [0, 1],
         arrayminus: [0, 3],
-        visible: true
+        visible: true,
+        color: "black",
+        thickness: 1.0,
+        width: 10,
     },
 };
 data.push(bar);
@@ -32,6 +39,9 @@ bar = {
     y: y_values,
     type: 'bar',
     name: "Vertical",
+    marker: {
+        color: colors.GREEN,
+    },
     // text: y_values.map(String),
     // textposition: "auto",
     // hoverinfo: "none",
@@ -40,7 +50,10 @@ bar = {
         symmetric: false,
         array: [1, 1],
         arrayminus: [1, 3],
-        visible: true
+        visible: true,
+        color: "black",
+        thickness: 1.0,
+        width: 10,
     },
 };
 data.push(bar);
@@ -48,6 +61,6 @@ data.push(bar);
 const layout = {
     title: "Layout Loading Times",
     xaxis: {title: "Loading Scenario"},
-    yaxis: {title: "Time (s)", autotick: false, dtick: 5},
+    yaxis: {title: "Time (s)", autotick: false, dtick: 5, gridcolor: colors.GREY, gridwidth: 1.5},
 }
 plot(data, layout);

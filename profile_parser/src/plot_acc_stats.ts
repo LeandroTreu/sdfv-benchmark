@@ -46,7 +46,7 @@ for (let i = 0; i < benchmarks.length; ++i) {
 
 let layout = {
     title: "Zoom FPS Benchmark",
-    yaxis: {title: "Average FPS", range: [0, 61], dtick: 5},
+    yaxis: {title: "Average FPS", range: [0, 61], dtick: 5, gridcolor: colors.GREY, gridwidth: 1.5},
 }
 plot(data, layout);
 
@@ -96,6 +96,6 @@ for (let i = 0; i < benchmarks.length; ++i) {
 
 layout = {
     title: "Panning FPS Benchmark",
-    yaxis: {title: "Average FPS", range: [0, 61], dtick: 5},
+    yaxis: {title: "Average FPS", range: [0, 61], dtick: 5, gridcolor: colors.GREY, gridwidth: 1.5},
 }
 plot(data, layout);

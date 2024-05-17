@@ -107,7 +107,7 @@ for (let i = 0; i < files_in_directory.length; ++i) {
 
 const layout = {
     title: PLOT_TITLE,
-    yaxis: {title: "Frametime (ms)", autotick: false, dtick: 5},
+    yaxis: {title: "Frametime (ms)", autotick: false, dtick: 20, gridcolor: colors.GREY, gridwidth: 1.5},
     shapes: [
         // 60 fps line
         {
