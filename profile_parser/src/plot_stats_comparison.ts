@@ -7,8 +7,8 @@ import colors from "./color_cfg";
 const N_VERSIONS = 2; // Number of different benchmark versions to compare (each version gets a color in the graph)
 const TRACES_PER_VERSION = 3; // Number of samples/traces per version
 
-const PLOT_TITLE = "Zoom Frametime Comparison";
-const bar_colors = ["#388E3C", "#1976D2", "orange", "blue"];
+const PLOT_TITLE = "Frametime Comparison";
+const bar_colors = [colors.GREEN, colors.BLUE, colors.ORANGE, colors.RED];
 
 let sample_index = 0;
 let avg_frametimes: number[] = [];
@@ -36,15 +36,6 @@ for (let i = 0; i < files_in_directory.length; ++i) {
         const median_frametime = stats.MedianFrameTime;
         const percentile_frametime = stats["95thPercentileFrameTime"];
 
-        let plot_filename = filename.replace("result-", "");
-        plot_filename = plot_filename.replace(".json", "");
-        if (sample_index === 3) {
-            plot_filename = "Optimized";
-        }
-        if (sample_index === 6) {
-            plot_filename = "Un-optimized";
-        }
-
         avg_frametimes.push(avg_frametime);
         median_frametimes.push(median_frametime);
         percentile_frametimes.push(percentile_frametime);
@@ -67,6 +58,21 @@ for (let i = 0; i < files_in_directory.length; ++i) {
                                     median_frametimes[median_frametimes.length-1] - median_m_ft, 
                                     percentile_frametimes[percentile_frametimes.length-1] - median_p_ft];
             const y_values = [median_avg_ft, median_m_ft, median_p_ft];
+
+            let plot_filename = filename.replace("result-", "");
+            plot_filename = plot_filename.replace(".json", "");
+            if (sample_index === 3) {
+                // plot_filename = "Optimized";
+                plot_filename = "Curved";
+            }
+            if (sample_index === 6) {
+                // plot_filename = "Un-optimized";
+                plot_filename = "Angular";
+            }
+            if (sample_index === 9) {
+                plot_filename = "Straight";
+            }
+
             const bar: Plot = { 
                 x: ["Average", "Median", "95th Percentile"],
                 y: y_values,
